@@ -1,0 +1,943 @@
+{
+ "serverInfo": {
+  "name": "Abinomics Reference",
+  "version": "1.0.0"
+ },
+ "authentication": {
+  "required": false,
+  "schemes": [
+   "bearer"
+  ],
+  "description": "Optional API key (Authorization: Bearer abn_... or X-API-Key). Anonymous: 100 tool calls/day per IP."
+ },
+ "tools": [
+  {
+   "name": "define_term",
+   "title": "Define a financial term",
+   "description": "Get the definition of a finance or economics term by its name or abbreviation (e.g. \"ETF\", \"APR\", \"inflation\", \"put option\"). Matching ignores case, accents and punctuation, accepts English names on any edition, and tolerates small typos. Returns the best entry with its full definition, aliases, category, related terms, translation status and canonical URL to cite, plus alternative candidates. If several entries share the exact name, returns ambiguous=true with candidates.",
+   "inputSchema": {
+    "type": "object",
+    "properties": {
+     "term": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "Term name or abbreviation to define."
+     },
+     "lang": {
+      "type": "string",
+      "enum": [
+       "en",
+       "af",
+       "ar",
+       "be",
+       "bg",
+       "ca",
+       "zh-CN",
+       "zh-TW",
+       "hr",
+       "cs",
+       "da",
+       "nl",
+       "tl",
+       "fi",
+       "fr",
+       "de",
+       "el",
+       "iw",
+       "hi",
+       "hu",
+       "is",
+       "id",
+       "ga",
+       "it",
+       "ja",
+       "ko",
+       "no",
+       "fa",
+       "pl",
+       "pt",
+       "ro",
+       "ru",
+       "sr",
+       "es",
+       "sv",
+       "th"
+      ],
+      "default": "en",
+      "description": "Language code of the dictionary edition (e.g. en, es, de, fr, ja, zh-CN). Use list_languages for names."
+     }
+    },
+    "required": [
+     "term"
+    ],
+    "additionalProperties": false
+   },
+   "annotations": {
+    "readOnlyHint": true,
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false,
+    "title": "Define a financial term"
+   }
+  },
+  {
+   "name": "search_terms",
+   "title": "Search the dictionary",
+   "description": "Search Abinomics term names, aliases and abbreviations (and, as a last resort, definition text). Use for partial, exploratory or uncertain queries. Returns ranked matches with slug, name, short definition, category and URL. Use get_term with a slug for the full entry.",
+   "inputSchema": {
+    "type": "object",
+    "properties": {
+     "query": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "Search text."
+     },
+     "lang": {
+      "type": "string",
+      "enum": [
+       "en",
+       "af",
+       "ar",
+       "be",
+       "bg",
+       "ca",
+       "zh-CN",
+       "zh-TW",
+       "hr",
+       "cs",
+       "da",
+       "nl",
+       "tl",
+       "fi",
+       "fr",
+       "de",
+       "el",
+       "iw",
+       "hi",
+       "hu",
+       "is",
+       "id",
+       "ga",
+       "it",
+       "ja",
+       "ko",
+       "no",
+       "fa",
+       "pl",
+       "pt",
+       "ro",
+       "ru",
+       "sr",
+       "es",
+       "sv",
+       "th"
+      ],
+      "default": "en",
+      "description": "Language code of the dictionary edition (e.g. en, es, de, fr, ja, zh-CN). Use list_languages for names."
+     },
+     "limit": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 50,
+      "default": 10,
+      "description": "Maximum results."
+     }
+    },
+    "required": [
+     "query"
+    ],
+    "additionalProperties": false
+   },
+   "annotations": {
+    "readOnlyHint": true,
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false,
+    "title": "Search the dictionary"
+   }
+  },
+  {
+   "name": "get_term",
+   "title": "Get a term by slug",
+   "description": "Fetch one dictionary entry by its slug (the stable id used in URLs, e.g. \"exchange-traded-fund\"). Slugs are the same in every language edition.",
+   "inputSchema": {
+    "type": "object",
+    "properties": {
+     "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "maxLength": 200,
+      "description": "Term slug."
+     },
+     "lang": {
+      "type": "string",
+      "enum": [
+       "en",
+       "af",
+       "ar",
+       "be",
+       "bg",
+       "ca",
+       "zh-CN",
+       "zh-TW",
+       "hr",
+       "cs",
+       "da",
+       "nl",
+       "tl",
+       "fi",
+       "fr",
+       "de",
+       "el",
+       "iw",
+       "hi",
+       "hu",
+       "is",
+       "id",
+       "ga",
+       "it",
+       "ja",
+       "ko",
+       "no",
+       "fa",
+       "pl",
+       "pt",
+       "ro",
+       "ru",
+       "sr",
+       "es",
+       "sv",
+       "th"
+      ],
+      "default": "en",
+      "description": "Language code of the dictionary edition (e.g. en, es, de, fr, ja, zh-CN). Use list_languages for names."
+     }
+    },
+    "required": [
+     "slug"
+    ],
+    "additionalProperties": false
+   },
+   "annotations": {
+    "readOnlyHint": true,
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false,
+    "title": "Get a term by slug"
+   }
+  },
+  {
+   "name": "list_categories",
+   "title": "List categories",
+   "description": "List dictionary categories (economics, finance, politics; older keys such as crypto or markets are aliases of finance) with localized labels and term counts.",
+   "inputSchema": {
+    "type": "object",
+    "properties": {
+     "lang": {
+      "type": "string",
+      "enum": [
+       "en",
+       "af",
+       "ar",
+       "be",
+       "bg",
+       "ca",
+       "zh-CN",
+       "zh-TW",
+       "hr",
+       "cs",
+       "da",
+       "nl",
+       "tl",
+       "fi",
+       "fr",
+       "de",
+       "el",
+       "iw",
+       "hi",
+       "hu",
+       "is",
+       "id",
+       "ga",
+       "it",
+       "ja",
+       "ko",
+       "no",
+       "fa",
+       "pl",
+       "pt",
+       "ro",
+       "ru",
+       "sr",
+       "es",
+       "sv",
+       "th"
+      ],
+      "default": "en",
+      "description": "Language code of the dictionary edition (e.g. en, es, de, fr, ja, zh-CN). Use list_languages for names."
+     }
+    },
+    "additionalProperties": false
+   },
+   "annotations": {
+    "readOnlyHint": true,
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false,
+    "title": "List categories"
+   }
+  },
+  {
+   "name": "browse_category",
+   "title": "Browse a category",
+   "description": "List terms in one category (use list_categories for keys), alphabetically with short definitions. Paginate with offset.",
+   "inputSchema": {
+    "type": "object",
+    "properties": {
+     "category": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$",
+      "maxLength": 50,
+      "description": "Category key: economics, finance or politics (older keys like \"crypto\" still work as aliases)."
+     },
+     "lang": {
+      "type": "string",
+      "enum": [
+       "en",
+       "af",
+       "ar",
+       "be",
+       "bg",
+       "ca",
+       "zh-CN",
+       "zh-TW",
+       "hr",
+       "cs",
+       "da",
+       "nl",
+       "tl",
+       "fi",
+       "fr",
+       "de",
+       "el",
+       "iw",
+       "hi",
+       "hu",
+       "is",
+       "id",
+       "ga",
+       "it",
+       "ja",
+       "ko",
+       "no",
+       "fa",
+       "pl",
+       "pt",
+       "ro",
+       "ru",
+       "sr",
+       "es",
+       "sv",
+       "th"
+      ],
+      "default": "en",
+      "description": "Language code of the dictionary edition (e.g. en, es, de, fr, ja, zh-CN). Use list_languages for names."
+     },
+     "limit": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 50,
+      "default": 25
+     },
+     "offset": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 0
+     }
+    },
+    "required": [
+     "category"
+    ],
+    "additionalProperties": false
+   },
+   "annotations": {
+    "readOnlyHint": true,
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false,
+    "title": "Browse a category"
+   }
+  },
+  {
+   "name": "list_languages",
+   "title": "List languages",
+   "description": "List the 36 language editions with codes, names, site URLs and translation coverage.",
+   "inputSchema": {
+    "type": "object",
+    "properties": {},
+    "additionalProperties": false
+   },
+   "annotations": {
+    "readOnlyHint": true,
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false,
+    "title": "List languages"
+   }
+  },
+  {
+   "name": "random_term",
+   "title": "Random term",
+   "description": "Return a random dictionary entry, e.g. for a \"term of the day\" or quiz.",
+   "inputSchema": {
+    "type": "object",
+    "properties": {
+     "lang": {
+      "type": "string",
+      "enum": [
+       "en",
+       "af",
+       "ar",
+       "be",
+       "bg",
+       "ca",
+       "zh-CN",
+       "zh-TW",
+       "hr",
+       "cs",
+       "da",
+       "nl",
+       "tl",
+       "fi",
+       "fr",
+       "de",
+       "el",
+       "iw",
+       "hi",
+       "hu",
+       "is",
+       "id",
+       "ga",
+       "it",
+       "ja",
+       "ko",
+       "no",
+       "fa",
+       "pl",
+       "pt",
+       "ro",
+       "ru",
+       "sr",
+       "es",
+       "sv",
+       "th"
+      ],
+      "default": "en",
+      "description": "Language code of the dictionary edition (e.g. en, es, de, fr, ja, zh-CN). Use list_languages for names."
+     }
+    },
+    "additionalProperties": false
+   },
+   "annotations": {
+    "readOnlyHint": true,
+    "destructiveHint": false,
+    "idempotentHint": false,
+    "openWorldHint": false,
+    "title": "Random term"
+   }
+  },
+  {
+   "name": "define_genomics_term",
+   "title": "Define a genetics or genomics term",
+   "description": "Get the definition of a genetics, genomics or molecular biology term by name or abbreviation (e.g. \"allele\", \"PCR\", \"codon\", \"Hardy-Weinberg law\"). Matching ignores case, accents and punctuation, accepts English names on any edition, and tolerates small typos. Returns the best entry with its full definition, category, related terms, translation status and canonical URL to cite, plus alternative candidates. Educational reference, not medical advice.",
+   "inputSchema": {
+    "type": "object",
+    "properties": {
+     "term": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "Term name or abbreviation to define."
+     },
+     "lang": {
+      "type": "string",
+      "enum": [
+       "en",
+       "af",
+       "ar",
+       "be",
+       "bg",
+       "ca",
+       "zh-CN",
+       "zh-TW",
+       "hr",
+       "cs",
+       "da",
+       "nl",
+       "tl",
+       "fi",
+       "fr",
+       "de",
+       "el",
+       "iw",
+       "hi",
+       "hu",
+       "is",
+       "id",
+       "ga",
+       "it",
+       "ja",
+       "ko",
+       "no",
+       "fa",
+       "pl",
+       "pt",
+       "ro",
+       "ru",
+       "sr",
+       "es",
+       "sv",
+       "th"
+      ],
+      "default": "en",
+      "description": "Language code of the dictionary edition (e.g. en, es, de, fr, ja, zh-CN). Use list_languages for names."
+     }
+    },
+    "required": [
+     "term"
+    ],
+    "additionalProperties": false
+   },
+   "annotations": {
+    "readOnlyHint": true,
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false,
+    "title": "Define a genetics or genomics term"
+   }
+  },
+  {
+   "name": "search_genomics",
+   "title": "Search the genomics dictionary",
+   "description": "Search genomics/genetics term names and abbreviations (and, as a last resort, definition text). Use for partial or exploratory queries. Returns ranked matches with slug, name, short definition, category and URL; use get_genomics_term with a slug for the full entry. Optional category filter.",
+   "inputSchema": {
+    "type": "object",
+    "properties": {
+     "query": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "Search text."
+     },
+     "lang": {
+      "type": "string",
+      "enum": [
+       "en",
+       "af",
+       "ar",
+       "be",
+       "bg",
+       "ca",
+       "zh-CN",
+       "zh-TW",
+       "hr",
+       "cs",
+       "da",
+       "nl",
+       "tl",
+       "fi",
+       "fr",
+       "de",
+       "el",
+       "iw",
+       "hi",
+       "hu",
+       "is",
+       "id",
+       "ga",
+       "it",
+       "ja",
+       "ko",
+       "no",
+       "fa",
+       "pl",
+       "pt",
+       "ro",
+       "ru",
+       "sr",
+       "es",
+       "sv",
+       "th"
+      ],
+      "default": "en",
+      "description": "Language code of the dictionary edition (e.g. en, es, de, fr, ja, zh-CN). Use list_languages for names."
+     },
+     "category": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$",
+      "maxLength": 50,
+      "description": "Optional genomics category key (see list_genomics_categories), e.g. \"molecular-biology\"."
+     },
+     "limit": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 50,
+      "default": 10,
+      "description": "Maximum results."
+     }
+    },
+    "required": [
+     "query"
+    ],
+    "additionalProperties": false
+   },
+   "annotations": {
+    "readOnlyHint": true,
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false,
+    "title": "Search the genomics dictionary"
+   }
+  },
+  {
+   "name": "get_genomics_term",
+   "title": "Get a genomics term by slug",
+   "description": "Fetch one genomics dictionary entry by its slug (stable id used in /genomics/{slug}/ URLs, e.g. \"allele\", \"messenger-rna\"). Slugs are the same in every language edition.",
+   "inputSchema": {
+    "type": "object",
+    "properties": {
+     "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "maxLength": 200,
+      "description": "Genomics term slug."
+     },
+     "lang": {
+      "type": "string",
+      "enum": [
+       "en",
+       "af",
+       "ar",
+       "be",
+       "bg",
+       "ca",
+       "zh-CN",
+       "zh-TW",
+       "hr",
+       "cs",
+       "da",
+       "nl",
+       "tl",
+       "fi",
+       "fr",
+       "de",
+       "el",
+       "iw",
+       "hi",
+       "hu",
+       "is",
+       "id",
+       "ga",
+       "it",
+       "ja",
+       "ko",
+       "no",
+       "fa",
+       "pl",
+       "pt",
+       "ro",
+       "ru",
+       "sr",
+       "es",
+       "sv",
+       "th"
+      ],
+      "default": "en",
+      "description": "Language code of the dictionary edition (e.g. en, es, de, fr, ja, zh-CN). Use list_languages for names."
+     }
+    },
+    "required": [
+     "slug"
+    ],
+    "additionalProperties": false
+   },
+   "annotations": {
+    "readOnlyHint": true,
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false,
+    "title": "Get a genomics term by slug"
+   }
+  },
+  {
+   "name": "list_genomics_categories",
+   "title": "List genomics categories",
+   "description": "List genomics dictionary categories (molecular biology, genomics & sequencing, classical genetics, cytogenetics, population genetics, medical genetics, biotechnology, model organisms, ...) with labels and term counts.",
+   "inputSchema": {
+    "type": "object",
+    "properties": {
+     "lang": {
+      "type": "string",
+      "enum": [
+       "en",
+       "af",
+       "ar",
+       "be",
+       "bg",
+       "ca",
+       "zh-CN",
+       "zh-TW",
+       "hr",
+       "cs",
+       "da",
+       "nl",
+       "tl",
+       "fi",
+       "fr",
+       "de",
+       "el",
+       "iw",
+       "hi",
+       "hu",
+       "is",
+       "id",
+       "ga",
+       "it",
+       "ja",
+       "ko",
+       "no",
+       "fa",
+       "pl",
+       "pt",
+       "ro",
+       "ru",
+       "sr",
+       "es",
+       "sv",
+       "th"
+      ],
+      "default": "en",
+      "description": "Language code of the dictionary edition (e.g. en, es, de, fr, ja, zh-CN). Use list_languages for names."
+     }
+    },
+    "additionalProperties": false
+   },
+   "annotations": {
+    "readOnlyHint": true,
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false,
+    "title": "List genomics categories"
+   }
+  },
+  {
+   "name": "browse_genomics_category",
+   "title": "Browse a genomics category",
+   "description": "List genomics terms in one category (use list_genomics_categories for keys), alphabetically with short definitions. Paginate with offset.",
+   "inputSchema": {
+    "type": "object",
+    "properties": {
+     "category": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$",
+      "maxLength": 50,
+      "description": "Category key, e.g. \"cytogenetics\"."
+     },
+     "lang": {
+      "type": "string",
+      "enum": [
+       "en",
+       "af",
+       "ar",
+       "be",
+       "bg",
+       "ca",
+       "zh-CN",
+       "zh-TW",
+       "hr",
+       "cs",
+       "da",
+       "nl",
+       "tl",
+       "fi",
+       "fr",
+       "de",
+       "el",
+       "iw",
+       "hi",
+       "hu",
+       "is",
+       "id",
+       "ga",
+       "it",
+       "ja",
+       "ko",
+       "no",
+       "fa",
+       "pl",
+       "pt",
+       "ro",
+       "ru",
+       "sr",
+       "es",
+       "sv",
+       "th"
+      ],
+      "default": "en",
+      "description": "Language code of the dictionary edition (e.g. en, es, de, fr, ja, zh-CN). Use list_languages for names."
+     },
+     "limit": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 50,
+      "default": 25
+     },
+     "offset": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 0
+     }
+    },
+    "required": [
+     "category"
+    ],
+    "additionalProperties": false
+   },
+   "annotations": {
+    "readOnlyHint": true,
+    "destructiveHint": false,
+    "idempotentHint": true,
+    "openWorldHint": false,
+    "title": "Browse a genomics category"
+   }
+  },
+  {
+   "name": "random_genomics_term",
+   "title": "Random genomics term",
+   "description": "Return a random genomics dictionary entry, optionally within one category, e.g. for a quiz or \"term of the day\".",
+   "inputSchema": {
+    "type": "object",
+    "properties": {
+     "lang": {
+      "type": "string",
+      "enum": [
+       "en",
+       "af",
+       "ar",
+       "be",
+       "bg",
+       "ca",
+       "zh-CN",
+       "zh-TW",
+       "hr",
+       "cs",
+       "da",
+       "nl",
+       "tl",
+       "fi",
+       "fr",
+       "de",
+       "el",
+       "iw",
+       "hi",
+       "hu",
+       "is",
+       "id",
+       "ga",
+       "it",
+       "ja",
+       "ko",
+       "no",
+       "fa",
+       "pl",
+       "pt",
+       "ro",
+       "ru",
+       "sr",
+       "es",
+       "sv",
+       "th"
+      ],
+      "default": "en",
+      "description": "Language code of the dictionary edition (e.g. en, es, de, fr, ja, zh-CN). Use list_languages for names."
+     },
+     "category": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$",
+      "maxLength": 50,
+      "description": "Optional genomics category key (see list_genomics_categories), e.g. \"molecular-biology\"."
+     }
+    },
+    "additionalProperties": false
+   },
+   "annotations": {
+    "readOnlyHint": true,
+    "destructiveHint": false,
+    "idempotentHint": false,
+    "openWorldHint": false,
+    "title": "Random genomics term"
+   }
+  }
+ ],
+ "resources": [
+  {
+   "uri": "abinomics://languages",
+   "name": "languages",
+   "title": "Abinomics language editions",
+   "description": "Supported language codes, site URLs and translation coverage.",
+   "mimeType": "application/json"
+  },
+  {
+   "uri": "abinomics://categories/en",
+   "name": "categories-en",
+   "title": "English categories",
+   "description": "Dictionary categories with term counts (English).",
+   "mimeType": "application/json"
+  },
+  {
+   "uri": "abinomics://genomics/categories/en",
+   "name": "genomics-categories-en",
+   "title": "Genomics categories (English)",
+   "description": "Genomics dictionary categories with term counts.",
+   "mimeType": "application/json"
+  }
+ ],
+ "prompts": [
+  {
+   "name": "explain_term",
+   "title": "Explain a financial term",
+   "description": "Explain a finance or economics term using the Abinomics definition, with a citation.",
+   "arguments": [
+    {
+     "name": "term",
+     "description": "Term or abbreviation",
+     "required": true
+    },
+    {
+     "name": "lang",
+     "description": "Language code (default en)",
+     "required": false
+    }
+   ]
+  },
+  {
+   "name": "explain_genomics_term",
+   "title": "Explain a genetics or genomics term",
+   "description": "Explain a genetics, genomics or molecular biology term using the Abinomics definition, with a citation.",
+   "arguments": [
+    {
+     "name": "term",
+     "description": "Term or abbreviation",
+     "required": true
+    },
+    {
+     "name": "lang",
+     "description": "Language code (default en)",
+     "required": false
+    }
+   ]
+  }
+ ]
+}

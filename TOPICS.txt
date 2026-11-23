@@ -1,0 +1,1 @@
+mcp, mcp-server, model-context-protocol, remote-mcp, streamable-http, openapi, rest-api, dictionary, glossary, reference, economics, finance, politics, genomics, genetics, multilingual, llm, ai-agents, llms-txt

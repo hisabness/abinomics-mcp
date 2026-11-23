@@ -1,0 +1,38 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "com.abinomics/reference",
+  "title": "Abinomics Reference",
+  "description": "Reference for people and agents: economics, finance, politics and genomics terms in 36 languages.",
+  "version": "1.0.0",
+  "websiteUrl": "https://abinomics.com/developers/",
+  "icons": [
+    {
+      "src": "https://abinomics.com/assets/icons/icon-192.png",
+      "mimeType": "image/png",
+      "sizes": [
+        "192x192"
+      ]
+    },
+    {
+      "src": "https://abinomics.com/assets/icons/icon-512.png",
+      "mimeType": "image/png",
+      "sizes": [
+        "512x512"
+      ]
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://abinomics.com/mcp",
+      "headers": [
+        {
+          "name": "Authorization",
+          "description": "Optional: 'Bearer abn_...' API key for higher rate limits (free keys at https://abinomics.com/developers/keys/). Anonymous use: 100 tool calls/day per IP.",
+          "isRequired": false,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}

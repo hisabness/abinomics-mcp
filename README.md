@@ -167,6 +167,8 @@ curl -s -X POST https://abinomics.com/api/v1/billing/portal -H "Authorization: B
 
 Catalog: `GET https://abinomics.com/api/v1/billing/plans`. Billing endpoints and MCP billing tools are never metered.
 
+After the daily quota and prepaid credits are used up, the same 402 also advertises **x402** (USDC on Base, **$0.001 per request**). Retry the request with a `PAYMENT-SIGNATURE` (v2) or `X-PAYMENT` (v1) header. Discovery: `GET https://abinomics.com/api/v1/billing/x402`. Credit packs: `POST https://abinomics.com/api/v1/billing/x402/credits`.
+
 ## Citation and license
 
 - Code and configuration snippets in this repository: MIT (see [LICENSE](LICENSE)).

@@ -7433,6 +7433,152 @@
    "protocolProfileBehavior": {
     "disableBodyPruning": true
    }
+  },
+  {
+   "id": "9de4fda8-e0f1-4fc1-bc49-57156bd8596b",
+   "name": "Billing: plans and credit packs (not metered)",
+   "request": {
+    "name": "Billing: plans and credit packs (not metered)",
+    "description": {},
+    "url": {
+     "path": [
+      "billing",
+      "plans"
+     ],
+     "host": [
+      "{{baseUrl}}"
+     ],
+     "query": [],
+     "variable": []
+    },
+    "header": [
+     {
+      "key": "Accept",
+      "value": "application/json"
+     }
+    ],
+    "method": "GET"
+   },
+   "response": []
+  },
+  {
+   "id": "967ccb6c-7dc4-446e-aeeb-9b93ad2a7760",
+   "name": "Billing: create checkout for a plan or credit pack",
+   "request": {
+    "name": "Billing: create checkout for a plan or credit pack",
+    "description": {},
+    "url": {
+     "path": [
+      "billing",
+      "checkout"
+     ],
+     "host": [
+      "{{baseUrl}}"
+     ],
+     "query": [],
+     "variable": []
+    },
+    "header": [
+     {
+      "key": "Accept",
+      "value": "application/json"
+     },
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     }
+    ],
+    "method": "POST",
+    "body": {
+     "mode": "raw",
+     "raw": "{\"pack\": \"credits_100k\"}",
+     "options": {
+      "raw": {
+       "language": "json"
+      }
+     }
+    },
+    "auth": {
+     "type": "bearer",
+     "bearer": [
+      {
+       "key": "token",
+       "value": "{{apiKey}}",
+       "type": "string"
+      }
+     ]
+    }
+   },
+   "response": []
+  },
+  {
+   "id": "0aa70169-bc04-4ad2-9196-cf43831b173e",
+   "name": "Billing: checkout status (returns new key once paid)",
+   "request": {
+    "name": "Billing: checkout status (returns new key once paid)",
+    "description": {},
+    "url": {
+     "path": [
+      "billing",
+      "session"
+     ],
+     "host": [
+      "{{baseUrl}}"
+     ],
+     "query": [
+      {
+       "key": "session_id",
+       "value": "cs_..."
+      }
+     ],
+     "variable": []
+    },
+    "header": [
+     {
+      "key": "Accept",
+      "value": "application/json"
+     }
+    ],
+    "method": "GET"
+   },
+   "response": []
+  },
+  {
+   "id": "5e87b59d-6d35-47d8-bf58-68011dc88465",
+   "name": "Billing: Customer Portal link (key required)",
+   "request": {
+    "name": "Billing: Customer Portal link (key required)",
+    "description": {},
+    "url": {
+     "path": [
+      "billing",
+      "portal"
+     ],
+     "host": [
+      "{{baseUrl}}"
+     ],
+     "query": [],
+     "variable": []
+    },
+    "header": [
+     {
+      "key": "Accept",
+      "value": "application/json"
+     }
+    ],
+    "method": "POST",
+    "auth": {
+     "type": "bearer",
+     "bearer": [
+      {
+       "key": "token",
+       "value": "{{apiKey}}",
+       "type": "string"
+      }
+     ]
+    }
+   },
+   "response": []
   }
  ],
  "event": [],

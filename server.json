@@ -3,7 +3,7 @@
   "name": "com.abinomics/reference",
   "title": "Abinomics Reference",
   "description": "Reference for people and agents: economics, finance, politics and genomics terms in 36 languages.",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "websiteUrl": "https://abinomics.com/developers/",
   "repository": {
     "url": "https://github.com/hisabness/abinomics-mcp",
@@ -32,7 +32,7 @@
       "headers": [
         {
           "name": "Authorization",
-          "description": "Optional: 'Bearer abn_...' API key for higher rate limits (free keys at https://abinomics.com/developers/keys/). Anonymous use: 100 tool calls/day per IP.",
+          "description": "Optional: 'Bearer abn_...' API key for higher limits (free key, paid plans or prepaid credits: https://abinomics.com/developers/pricing/). Anonymous: 100 tool calls/day per IP.",
           "isRequired": false,
           "isSecret": true
         }

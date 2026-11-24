@@ -117,6 +117,10 @@ connector: name `Abinomics`, MCP server URL `https://abinomics.com/mcp`, authent
 | `list_genomics_categories` | List genomics dictionary categories (molecular biology, genomics & sequencing, classical genetics, cytogenetics, population genetics, medical genetics, biotechnology, model organisms, ...) with labels and term counts. |
 | `browse_genomics_category` | List genomics terms in one category (use list_genomics_categories for keys), alphabetically with short definitions. |
 | `random_genomics_term` | Return a random genomics dictionary entry, optionally within one category, e.g. |
+| `get_pricing` | Paid plans and prepaid credit packs with prices and limits (not metered). |
+| `create_checkout` | Stripe Checkout link for a plan or credit pack, to hand to a human (not metered). |
+| `check_checkout` | Whether a checkout is paid; returns the upgraded key's tier/credits or a newly issued key (not metered). |
+| `get_usage` | Your tier, usage today, credits left and reset time (not metered). |
 
 The server also offers prompts and resources; see the [server card](.well-known/server-card.json).
 
@@ -133,12 +137,35 @@ fallback entries are English, not translations.
 |---|---|---|
 | Anonymous (per IP) | 100 metered requests | Free, no sign-up |
 | [Free key](https://abinomics.com/developers/keys/) | 1,000 | Free |
+| Developer | 10,000 | $9 / month |
 | Pro | 50,000 | $19 / month |
 | Business | 500,000 + bulk export | $99 / month |
 | Enterprise & AI licensing | Custom | [Contact](https://abinomics.com/developers/pricing/) |
+| Prepaid credits (any key) | 1 credit per request after the daily quota | 10k $5 · 100k $29 · 1M $199, never expire |
 
 Static listings (`terms.json`, categories) are unmetered and cacheable. Responses carry
-`X-RateLimit-*` headers; over the limit returns HTTP 429 with an `upgrade_url`.
+`X-RateLimit-*`, `X-API-Tier` and `X-Credits-Remaining` headers. With the daily quota and
+credits used up the API returns **HTTP 402 Payment Required** (MCP: JSON-RPC error -32029 over HTTP 402)
+with `error.payment` describing how to pay. Pricing page: https://abinomics.com/developers/pricing/
+
+### Paying from an agent
+
+```bash
+# 1. Create a checkout (send your key to upgrade/top up it; omit it to get a new key after payment)
+curl -s https://abinomics.com/api/v1/billing/checkout \
+  -H "Authorization: Bearer $ABINOMICS_API_KEY" -H 'Content-Type: application/json' \
+  -d '{"pack":"credits_100k"}'          # or {"plan":"developer"|"pro"|"business"}
+# -> {"checkout_url":"https://checkout.stripe.com/...","session_id":"cs_...","status_url":"..."}
+
+# 2. Give checkout_url to a human (Stripe collects card, billing address, optional business tax ID).
+# 3. Poll until paid (returns tier, credits and, if issued, the new api_key):
+curl -s "https://abinomics.com/api/v1/billing/session?session_id=cs_..."
+
+# Manage / switch plan / cancel (Stripe Customer Portal link):
+curl -s -X POST https://abinomics.com/api/v1/billing/portal -H "Authorization: Bearer $ABINOMICS_API_KEY"
+```
+
+Catalog: `GET https://abinomics.com/api/v1/billing/plans`. Billing endpoints and MCP billing tools are never metered.
 
 ## Citation and license
 

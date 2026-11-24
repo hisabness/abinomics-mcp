@@ -3,8 +3,12 @@
   "name": "com.abinomics/reference",
   "title": "Abinomics Reference",
   "description": "Reference for people and agents: economics, finance, politics and genomics terms in 36 languages.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "websiteUrl": "https://abinomics.com/developers/",
+  "repository": {
+    "url": "https://github.com/hisabness/abinomics-mcp",
+    "source": "github"
+  },
   "icons": [
     {
       "src": "https://abinomics.com/assets/icons/icon-192.png",
